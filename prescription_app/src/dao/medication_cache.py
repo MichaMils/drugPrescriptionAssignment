@@ -11,12 +11,12 @@ class MedicationCache:
 
     def update(self, medication_name: str, updated_medication: Medication):
         if medication_name not in self.cache:
-            raise KeyError(f"Medication with ID {medication_name} not found.")
+            return None
         self.cache[medication_name] = updated_medication
 
     def delete(self, medication_name: str):
         if medication_name not in self.cache:
-            raise KeyError(f"Medication with ID {medication_name} not found.")
+            return None
         del self.cache[medication_name]
 
     def get(self, medication_name: str):

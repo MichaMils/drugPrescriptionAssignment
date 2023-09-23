@@ -15,8 +15,7 @@ class MedicationHandler:
         self.medications = medications
         self.medication_cache = medication_cache
 
-    def getMedicationIfExists(self, name: str):
-        # check if the medication exists in cache
+    def get_medication_if_exists(self, name: str):
         medication = self.medication_cache.get(name)
         if medication:
             return medication
@@ -27,7 +26,7 @@ class MedicationHandler:
             self.medication_cache.create(medication)
             return medication
 
-    def fetchMedication(self, medication: MedicationPayload):
+    def fetch_medication(self, medication: MedicationPayload):
         try:
             res = requests.get(
                 f"https://clinicaltables.nlm.nih.gov/api/rxterms/v3/search?terms={medication.name}&ef=RXCUIS"
@@ -54,43 +53,24 @@ class MedicationHandler:
                 new_medication = Medication(**medication_data)
                 return new_medication
 
-    def addMedicationToPrescription(self, prescription_id: str, medication: Medication):
+    def add_medication_to_prescription(self, prescription_id: str, medication: Medication):
         existing_prescription = self.prescriptions.get(prescription_id)
         if existing_prescription:
             existing_prescription.medications.append(medication.name)
-            return medication.name
-        return None
+            return (medication.name,200,)
+        return (
+            f"Invalid prescription id, error when trying to add {medication.name} to prescription {prescription_id}",
+            400,
+            )
 
     def add_medication(self, prescription_id: str, medication: MedicationPayload):
-        existing_medication = self.getMedicationIfExists(medication.name)
+        existing_medication = self.get_medication_if_exists(medication.name)
         if existing_medication:
-            medication_name = self.addMedicationToPrescription(
-                prescription_id, existing_medication
-            )
-            if not medication_name:
-                return (
-                    f"Error when trying to add {medication.name} to prescription {prescription_id}",
-                    500,
-                )
-            return (
-                medication_name,
-                200,
-            )
+            return self.add_medication_to_prescription(prescription_id, existing_medication)
         else:
-            new_medication = self.fetchMedication(medication)
+            new_medication = self.fetch_medication(medication)
             if new_medication:
                 self.medications.create(new_medication)
                 self.medication_cache.create(new_medication)
-                medication_name = self.addMedicationToPrescription(
-                    prescription_id, new_medication
-                )
-                if not medication_name:
-                    return (
-                        f"Error when trying to add {new_medication.name} to prescription {prescription_id}",
-                        500,
-                    )
-                return (
-                    medication_name,
-                    200,
-                )
+                return self.add_medication_to_prescription(prescription_id, new_medication)
         return "Medication not found!", 404

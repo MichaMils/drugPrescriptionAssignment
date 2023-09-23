@@ -4,7 +4,6 @@ from dao.medication_dao import MedicationDAO
 from schemas import Prescription
 from validators.always_valid_validator import AlwaysValid
 from validators.interaction_validator import InteractionValidator
-from validators.validator import Validator
 from typing import List
 
 
@@ -14,12 +13,12 @@ class PrescriptionValidator:
         self.prescriptions = prescriptions
 
     async def validate(self, prescription: Prescription) -> List[str]:
-        # Use asyncio.gather to run both validators asynchronously
+        # Use asyncio.gather to run all validators asynchronously
         results = await asyncio.gather(
             *[validator.validate(prescription) for validator in self.validators]
         )
 
-        # Concatenate the results from both validators
+        # Concatenate the results from all validators
         all_warnings = []
         for warning_list in results:
             all_warnings.extend(warning_list)

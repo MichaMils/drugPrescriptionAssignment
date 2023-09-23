@@ -24,13 +24,13 @@ class PrescriptionHandler:
 
     async def close_prescription(self, prescription_id):
         prescription = self.prescriptions.get(prescription_id)
-        if not prescription: # prescription not exists
+        if not prescription:
             return "Not Exists!"
-        if len(prescription.medications) == 0: # prescription doesnt include any medications
+        if len(prescription.medications) == 0:
             return "Is Empty!"
         if len(prescription.medications) == 1:
              return []
-        # prescription exists and has some medications
+        # prescription exists and has at least 2 medications
         warnings = await self.prescription_validator.validate(prescription)
         if not warnings:
             return None

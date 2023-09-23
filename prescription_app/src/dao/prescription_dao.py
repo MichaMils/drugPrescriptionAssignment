@@ -11,12 +11,12 @@ class PrescriptionDAO:
 
     def update(self, prescription_id: str, updated_prescription: Prescription):
         if prescription_id not in self.prescriptions:
-            raise KeyError(f"Prescription with ID {prescription_id} not found.")
+            return None
         self.prescriptions[prescription_id] = updated_prescription
 
     def delete(self, prescription_id: str):
         if prescription_id not in self.prescriptions:
-            raise KeyError(f"Prescription with ID {prescription_id} not found.")
+            return None
         del self.prescriptions[prescription_id]
 
     def get(self, prescription_id: str) -> Prescription:
