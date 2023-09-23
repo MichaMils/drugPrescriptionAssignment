@@ -59,7 +59,8 @@ payload:
 }
 ```
 <br>
-response: 
+response:
+
 ```json
 {
     "message": "ADVIL (Oral Liquid)"
@@ -137,3 +138,7 @@ response:<br>
     ]
 }
 ```
+
+
+### Tests
+Tests are implemented with Pytest. Can be run locally with Pycharm.
