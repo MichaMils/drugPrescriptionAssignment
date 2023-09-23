@@ -1,7 +1,6 @@
 import requests
 from dao.medication_cache import MedicationCache
-from payload_validation import MedicationPayload
-from schemas import Medication
+from schemas import Medication, MedicationPayload
 from dao.prescription_dao import PrescriptionDAO
 from dao.medication_dao import MedicationDAO
 

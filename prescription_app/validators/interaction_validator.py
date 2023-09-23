@@ -32,7 +32,6 @@ class InteractionValidator(Validator):
     async def get_interactions(
         self, session, medicine_codes: List[List[str]]
     ) -> List[str]:
-        interactions = []
         # Use itertools.product to generate all possible combinations
         medicine_codes_combinations = list(product(*medicine_codes))
 
@@ -45,48 +44,36 @@ class InteractionValidator(Validator):
                 ]
             )
 
-            # Extract interaction information from the API responses
-            interactions = [
-                interactions_list for interactions_list in interaction_results
-            ]
+        return interaction_results
 
-        return interactions
+    def extract_comments(self,data):
+        # Extract and return interaction information from the API response
+        fullInteractionTypeGroup = data.get("fullInteractionTypeGroup", None)
+        if fullInteractionTypeGroup:
+            interaction_raw_data = fullInteractionTypeGroup[0].get(
+                "fullInteractionType", None
+            )
+            if interaction_raw_data:
+                return [
+                    iteraction.get("comment")
+                    for iteraction in interaction_raw_data
+                ]
 
     async def fetch_interaction(self, session, codes: Tuple[str]) -> List[str]:
         # Construct the API URL with the provided codes
         api_url = f"{self.api_base_url}?rxcuis={'+'.join(codes)}"
-        print(api_url)
 
         async with session.get(api_url) as response:
             if response.status == 200:
                 data = await response.json()
-                # Extract and return interaction information from the API response - TODO
-                fullInteractionTypeGroup = data.get("fullInteractionTypeGroup", None)
-                if fullInteractionTypeGroup:
-                    interaction_raw_data = fullInteractionTypeGroup[0].get(
-                        "fullInteractionType", None
-                    )
-                    if interaction_raw_data:
-                        return [
-                            iteraction.get("comment")
-                            for iteraction in interaction_raw_data
-                        ]
-
+                return {'codes':codes, 'warning': self.extract_comments(data)}
             # Handle API request errors or non-200 responses
             return []
 
     async def validate(self, prescription: Prescription) -> List[str]:
         medicine_codes = self.get_medicine_codes(prescription)
 
-        # Call the API for interactions asynchronously for all combinations
         async with aiohttp.ClientSession() as session:
             interaction_results = await self.get_interactions(session, medicine_codes)
 
-            # Extract interaction information from the API responses
-            interactions = [
-                interaction
-                for interactions_list in interaction_results
-                for interaction in interactions_list
-            ]
-
-        return interactions
+        return interaction_results

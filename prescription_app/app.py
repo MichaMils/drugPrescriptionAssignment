@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request, abort
 from medication_handler import MedicationHandler
 from prescription_handler import PrescriptionHandler
-from payload_validation import MedicationPayload
+from schemas import MedicationPayload
 from dao.medication_cache import MedicationCache
 from dao.prescription_dao import PrescriptionDAO
 from dao.medication_dao import MedicationDAO

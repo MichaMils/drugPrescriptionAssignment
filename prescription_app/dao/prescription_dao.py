@@ -1,5 +1,4 @@
-import uuid  # Import the uuid module
-from dao.models import Prescription
+from schemas import Prescription
 
 
 class PrescriptionDAO:
@@ -7,10 +6,8 @@ class PrescriptionDAO:
         self.prescriptions = {}
 
     def create(self, prescription: Prescription):
-        prescription_id = str(uuid.uuid4())  # Generate a new UUID
-        prescription.id = prescription_id  # Add the UUID to the Prescription object
-        self.prescriptions[prescription_id] = prescription
-        return prescription_id
+        self.prescriptions[prescription.id] = prescription
+        return prescription.id
 
     def update(self, prescription_id: str, updated_prescription: Prescription):
         if prescription_id not in self.prescriptions:
