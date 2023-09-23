@@ -4,7 +4,6 @@ from schemas import Medication, MedicationPayload
 from dao.prescription_dao import PrescriptionDAO
 from dao.medication_dao import MedicationDAO
 
-
 class MedicationHandler:
     def __init__(
         self,
@@ -94,4 +93,4 @@ class MedicationHandler:
                     medication_name,
                     200,
                 )
-        return "medicationNotFound", 400
+        return "Medication not found!", 404

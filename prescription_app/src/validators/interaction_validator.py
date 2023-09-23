@@ -31,7 +31,7 @@ class InteractionValidator(Validator):
 
     async def get_interactions(
         self, session, medicine_codes: List[List[str]]
-    ) -> List[str]:
+    ):
         # Use itertools.product to generate all possible combinations
         medicine_codes_combinations = list(product(*medicine_codes))
 
@@ -46,29 +46,29 @@ class InteractionValidator(Validator):
 
         return interaction_results
 
-    def extract_comments(self,data):
+    def extract_comments(self, data):
         # Extract and return interaction information from the API response
-        fullInteractionTypeGroup = data.get("fullInteractionTypeGroup", None)
-        if fullInteractionTypeGroup:
-            interaction_raw_data = fullInteractionTypeGroup[0].get(
+        full_interaction_type_group = data.get("fullInteractionTypeGroup", None)
+        if full_interaction_type_group:
+            interaction_raw_data = full_interaction_type_group[0].get(
                 "fullInteractionType", None
             )
             if interaction_raw_data:
                 return [
-                    iteraction.get("comment")
-                    for iteraction in interaction_raw_data
+                    interaction.get("comment")
+                    for interaction in interaction_raw_data
                 ]
 
-    async def fetch_interaction(self, session, codes: Tuple[str]) -> List[str]:
+    async def fetch_interaction(self, session, codes: Tuple[str]):
         # Construct the API URL with the provided codes
         api_url = f"{self.api_base_url}?rxcuis={'+'.join(codes)}"
 
         async with session.get(api_url) as response:
             if response.status == 200:
                 data = await response.json()
-                return {'codes':codes, 'warning': self.extract_comments(data)}
+                return {'codes': codes, 'warning': self.extract_comments(data)}
             # Handle API request errors or non-200 responses
-            return []
+            return {}
 
     async def validate(self, prescription: Prescription) -> List[str]:
         medicine_codes = self.get_medicine_codes(prescription)

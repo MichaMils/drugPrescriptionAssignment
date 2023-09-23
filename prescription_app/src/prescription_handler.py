@@ -24,4 +24,6 @@ class PrescriptionHandler:
 
     async def close_prescription(self, prescription_id):
         warnings = await self.prescription_validator.validate(prescription_id)
+        if not warnings:
+            return None
         return warnings

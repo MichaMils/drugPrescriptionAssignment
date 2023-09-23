@@ -2,3 +2,4 @@ flask[async]
 pydantic
 requests
 aiohttp
+pytest

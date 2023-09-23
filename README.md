@@ -1,4 +1,4 @@
-# drugPrescriptionAssignment
+# Drug Prescription Home Assignment
 
 ## Assumptions:
 

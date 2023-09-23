@@ -15,6 +15,8 @@ class PrescriptionValidator:
 
     async def validate(self, prescription_id: str) -> List[str]:
         prescription = self.prescriptions.get(prescription_id)
+        if not prescription:
+            return None
         # Use asyncio.gather to run both validators asynchronously
         results = await asyncio.gather(
             *[validator.validate(prescription) for validator in self.validators]
