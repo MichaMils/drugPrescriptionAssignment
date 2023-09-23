@@ -1,0 +1,10 @@
+version: '3'
+services:
+  prescription-app:
+    container_name: prescription-app
+    build:
+      context: ./prescription_app
+    ports:
+      - 3001:3001
+    volumes:
+      - ./prescription_app:/app
