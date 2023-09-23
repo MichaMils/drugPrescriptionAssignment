@@ -21,6 +21,7 @@ The close prescription route will check the product of the code lists as follows
 
 
 ## Running Instructions:
+Make sure docker (Docker version 23.0.5) and docker compose are installed on your machine and that docker deamon is running. <br>
 This app is created with docker-compose which builds the Dockerfile inside prescription_app directory.
 <br>
 Go the root folder and run: 
