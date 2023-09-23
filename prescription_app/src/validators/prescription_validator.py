@@ -13,10 +13,7 @@ class PrescriptionValidator:
         self.validators = [InteractionValidator(medications), AlwaysValid()]
         self.prescriptions = prescriptions
 
-    async def validate(self, prescription_id: str) -> List[str]:
-        prescription = self.prescriptions.get(prescription_id)
-        if not prescription:
-            return None
+    async def validate(self, prescription: Prescription) -> List[str]:
         # Use asyncio.gather to run both validators asynchronously
         results = await asyncio.gather(
             *[validator.validate(prescription) for validator in self.validators]

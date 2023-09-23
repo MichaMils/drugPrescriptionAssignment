@@ -54,8 +54,8 @@ def add_medication_to_prescription(prescription_id):
 @app.route("/close_prescription/<string:prescription_id>", methods=["POST"])
 async def close_prescription(prescription_id):
     warnings = await prescriptionHandler.close_prescription(prescription_id)
-    if warnings is None:
-        return jsonify({"message": "Prescription Not Exists!"}), 404
+    if isinstance(warnings, str):
+        return jsonify({"message": f"Prescription {warnings}"}), 404
     if warnings:
         return jsonify({"warnings": warnings}), 400
     else:

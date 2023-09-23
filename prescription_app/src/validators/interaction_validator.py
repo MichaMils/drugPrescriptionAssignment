@@ -55,7 +55,7 @@ class InteractionValidator(Validator):
             )
             if interaction_raw_data:
                 return [
-                    interaction.get("comment")
+                    interaction.get("comment", None)
                     for interaction in interaction_raw_data
                 ]
 
